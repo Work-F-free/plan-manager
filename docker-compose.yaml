@@ -1,0 +1,98 @@
+services:
+  minio:
+    container_name: minio
+    image: 'bitnami/minio:latest'
+    volumes:
+      - 'minio_data:/data'
+    ports:
+      - "9000:9000"
+    restart: unless-stopped
+    environment:
+      MINIO_ROOT_USER: "${MINIO_ROOT_USER:?error}"
+      MINIO_ROOT_PASSWORD: "${MINIO_ROOT_PASSWORD:?error}"
+      MINIO_USE_SSL: "${MINIO_USE_SSL:?error}"
+      MINIO_DEFAULT_BUCKETS: "${MINIO_BUCKET_NAME:?error}"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "500k"
+        max-file: "15"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 1G
+#    networks:
+#      - backend
+
+  mongo:
+    image: mongo:6.0
+    environment:
+      DB_USERNAME: "${DB_USERNAME:?error}"
+      DB_PASSWORD: "${DB_PASSWORD:?error}"
+      DB_NAME: "${DB_NAME:?error}"
+    ports:
+      - "27017:27017"
+    healthcheck:
+      test: mongo --username ${DB_USERNAME} --password ${DB_PASSWORD} --eval "db.adminCommand('ping')"
+      interval: 10s
+      timeout: 5s
+      start_period: 30s
+      retries: 5
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "500k"
+        max-file: "15"
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 2G
+#    networks:
+#      - backend
+
+  planner:
+    container_name: planner_service
+    build: ./
+    depends_on:
+      - mongo
+      - minio
+    environment:
+      - API_PORT=${API_PORT}
+      - DB_HOST=mongo
+      - DB_PORT=27017
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_NAME=${DB_NAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER}
+      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
+      - MINIO_USE_SSL=${MINIO_USE_SSL}
+      - MINIO_BUCKET_NAME=${MINIO_BUCKET_NAME}
+    ports:
+      - "${API_PORT}:${API_PORT}"
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 1G
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "500k"
+        max-file: "15"
+#    networks:
+#      - backend
+
+
+networks:
+  backend:
+
+volumes:
+  minio_data:
