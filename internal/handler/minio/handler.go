@@ -233,7 +233,6 @@ func (h *Handler) DeleteMany(c *gin.Context) {
 		return
 	}
 
-	// Возвращаем успешный ответ, если объекты успешно удалены
 	c.JSON(http.StatusOK, responses.SuccessResponse{
 		Status:  http.StatusOK,
 		Message: "Files deleted successfully",

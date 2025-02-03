@@ -9,7 +9,7 @@ import (
 )
 
 type Connection struct {
-	*mongoDb.Client
+	*mongoDb.Database
 }
 
 type DBConnection interface {
@@ -24,7 +24,7 @@ type Repo struct {
 
 func New(cnt Connection) *Repo {
 	return &Repo{
-		PlanRepo: mongo.NewPlanRepo(cnt.Client),
-		SeatRepo: mongo.NewSeatRepo(cnt.Client),
+		PlanRepo: mongo.NewPlanRepo(cnt.Database),
+		SeatRepo: mongo.NewSeatRepo(cnt.Database),
 	}
 }

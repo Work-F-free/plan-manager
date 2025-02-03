@@ -57,10 +57,18 @@ func (h *Handler) InitRoutes() *gin.Engine {
 
 		mongo := api.Group("/plan")
 		{
-			mongo.GET("/", nil)
-			mongo.GET("/test", nil)
-		}
+			mongo.GET("/", h.planHandler.GetAllPlans)
+			mongo.GET("/:planId", h.planHandler.GetPlan)
+			mongo.POST("/", h.planHandler.CreatePlan)
+			mongo.PUT("/:planId", h.planHandler.UpdatePlan)
+			mongo.DELETE("/:planId", h.planHandler.DeletePlan)
 
+			mongo.GET("/seat/", h.planHandler.GetAllSeats)
+			mongo.GET("/seat/:seatId", h.planHandler.GetSeat)
+			mongo.POST("/seat/", h.planHandler.CreateSeat)
+			mongo.PUT("/seat/:seatId", h.planHandler.UpdateSeat)
+			mongo.DELETE("/seat/:seatId", h.planHandler.DeleteSeat)
+		}
 	}
 
 	return router
