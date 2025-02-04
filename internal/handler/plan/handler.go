@@ -20,8 +20,19 @@ func NewPlanHandler(plannerService service.PlannerService) *Handler {
 	}
 }
 
+// GetAllPlans @Summary Get all coworking plans
+// @Description Get data about all coworkings plans in applicationi
+// @ID get-plans
+// @Tags Plans
+// @Accept  json
+// @Produce  json
+// @Success 200 {object} []dto.Plan
+// @Failure 400 {object} errors.ErrorResponse
+// @Failure 500 {object} errors.ErrorResponse
+// @Failure default {object} errors.ErrorResponse
+// @Router /api/plan [get]
 func (h *Handler) GetAllPlans(c *gin.Context) {
-	plans, statusCode, err := h.planService.GetAllPlans()
+	plans, statusCode, err := h.planService.GetAllPlans(c)
 	if err != nil {
 		c.JSON(statusCode, errors.ErrorResponse{
 			Error:   "error while getting plans",
@@ -33,6 +44,18 @@ func (h *Handler) GetAllPlans(c *gin.Context) {
 	c.JSON(statusCode, plans)
 }
 
+// GetPlan @Summary Get coworking plan by id
+// @Description Get data about one coworking
+// @ID get-plan
+// @Tags Plans
+// @Accept  json
+// @Produce  json
+// @Param planId path string true "Plan Id"
+// @Success 200 {object} dto.Plan
+// @Failure 400 {object} errors.ErrorResponse
+// @Failure 500 {object} errors.ErrorResponse
+// @Failure default {object} errors.ErrorResponse
+// @Router /api/plan/{planId} [get]
 func (h *Handler) GetPlan(c *gin.Context) {
 	id, err := uuid.Parse(c.Param("planId"))
 
@@ -45,7 +68,7 @@ func (h *Handler) GetPlan(c *gin.Context) {
 		return
 	}
 
-	plan, statusCode, err := h.planService.GetPlan(id)
+	plan, statusCode, err := h.planService.GetPlan(c, id)
 	if err != nil {
 		c.JSON(statusCode, errors.ErrorResponse{
 			Error:   "error while getting plan",
@@ -58,8 +81,20 @@ func (h *Handler) GetPlan(c *gin.Context) {
 	c.JSON(statusCode, plan)
 }
 
+// GetAllSeats @Summary Get all seats plans
+// @Description Get all seats from coworking
+// @ID get-seats
+// @Tags Seats
+// @Accept  json
+// @Produce  json
+// @Param planId path string true "Plan Id"
+// @Success 200 {object} []dto.Seat
+// @Failure 400 {object} errors.ErrorResponse
+// @Failure 500 {object} errors.ErrorResponse
+// @Failure default {object} errors.ErrorResponse
+// @Router /api/plan/seat/{planId} [get]
 func (h *Handler) GetAllSeats(c *gin.Context) {
-	plans, statusCode, err := h.planService.GetAllSeats()
+	plans, statusCode, err := h.planService.GetAllSeats(c)
 	if err != nil {
 		c.JSON(statusCode, errors.ErrorResponse{
 			Error:   "error while getting seats",
@@ -71,6 +106,18 @@ func (h *Handler) GetAllSeats(c *gin.Context) {
 	c.JSON(statusCode, plans)
 }
 
+// GetSeat @Summary Get seat by id
+// @Description Get data about one coworking
+// @ID get-seat
+// @Tags Seats
+// @Accept  json
+// @Produce  json
+// @Param seatId path string true "Seat Id"
+// @Success 200 {object} dto.Seat
+// @Failure 400 {object} errors.ErrorResponse
+// @Failure 500 {object} errors.ErrorResponse
+// @Failure default {object} errors.ErrorResponse
+// @Router /api/plan/seat/{seatId} [get]
 func (h *Handler) GetSeat(c *gin.Context) {
 	id, err := uuid.Parse(c.Param("seatId"))
 
@@ -83,7 +130,7 @@ func (h *Handler) GetSeat(c *gin.Context) {
 		return
 	}
 
-	plan, statusCode, err := h.planService.GetSeat(id)
+	plan, statusCode, err := h.planService.GetSeat(c, id)
 	if err != nil {
 		c.JSON(statusCode, errors.ErrorResponse{
 			Error:   "error while getting plan",
@@ -96,6 +143,18 @@ func (h *Handler) GetSeat(c *gin.Context) {
 	c.JSON(statusCode, plan)
 }
 
+// CreatePlan @Summary Create coworking plan
+// @Description Creates plan
+// @ID create-plan
+// @Tags Plans
+// @Accept  json
+// @Produce  json
+// @Param input body dto.Plan true "Coworking plan"
+// @Success 201 {object} responses.SuccessResponse
+// @Failure 400 {object} errors.ErrorResponse
+// @Failure 500 {object} errors.ErrorResponse
+// @Failure default {object} errors.ErrorResponse
+// @Router /api/plan/ [post]
 func (h *Handler) CreatePlan(c *gin.Context) {
 	var input dto.Plan
 
@@ -109,7 +168,7 @@ func (h *Handler) CreatePlan(c *gin.Context) {
 		return
 	}
 
-	statusCode, err := h.planService.CreatePlan(input)
+	statusCode, err := h.planService.CreatePlan(c, &input)
 
 	if err != nil {
 		c.JSON(statusCode, errors.ErrorResponse{
@@ -127,6 +186,19 @@ func (h *Handler) CreatePlan(c *gin.Context) {
 	})
 }
 
+// CreateSeat @Summary Create seat to coworking plan
+// @Description Creates seat
+// @ID create-seat
+// @Tags Seats
+// @Accept  json
+// @Produce  json
+// @Param planId path string true "Plan Id"
+// @Param input body dto.Seat true "Seat in coworking plan"
+// @Success 201 {object} responses.SuccessResponse
+// @Failure 400 {object} errors.ErrorResponse
+// @Failure 500 {object} errors.ErrorResponse
+// @Failure default {object} errors.ErrorResponse
+// @Router /api/plan/seat/{planId} [post]
 func (h *Handler) CreateSeat(c *gin.Context) {
 	var input dto.Seat
 
@@ -140,7 +212,7 @@ func (h *Handler) CreateSeat(c *gin.Context) {
 		return
 	}
 
-	statusCode, err := h.planService.CreateSeat(input)
+	statusCode, err := h.planService.CreateSeat(c, &input)
 
 	if err != nil {
 		c.JSON(statusCode, errors.ErrorResponse{
@@ -159,6 +231,19 @@ func (h *Handler) CreateSeat(c *gin.Context) {
 
 }
 
+// UpdatePlan @Summary Update plan
+// @Description Update plan from coworking plans
+// @ID update-plan
+// @Tags Plans
+// @Accept  json
+// @Produce  json
+// @Param planId path string true "Plan Id"
+// @Param input body dto.Plan true "Coworking plan"
+// @Success 204 {object} responses.SuccessResponse
+// @Failure 400 {object} errors.ErrorResponse
+// @Failure 500 {object} errors.ErrorResponse
+// @Failure default {object} errors.ErrorResponse
+// @Router /api/plan/{planId} [put]
 func (h *Handler) UpdatePlan(c *gin.Context) {
 	id, err := uuid.Parse(c.Param("planId"))
 	var input dto.Plan
@@ -182,7 +267,7 @@ func (h *Handler) UpdatePlan(c *gin.Context) {
 		return
 	}
 
-	statusCode, err := h.planService.UpdatePlan(input, id)
+	statusCode, err := h.planService.UpdatePlan(c, &input, id)
 
 	if err != nil {
 		c.JSON(statusCode, errors.ErrorResponse{
@@ -200,6 +285,19 @@ func (h *Handler) UpdatePlan(c *gin.Context) {
 	})
 }
 
+// UpdateSeat @Summary Update seat from coworking plan
+// @Description Updates seat
+// @ID update-seat
+// @Tags Seats
+// @Accept  json
+// @Produce  json
+// @Param planId path string true "Plan Id"
+// @Param input body dto.Seat true "Seat in coworking plan"
+// @Success 204 {object} responses.SuccessResponse
+// @Failure 400 {object} errors.ErrorResponse
+// @Failure 500 {object} errors.ErrorResponse
+// @Failure default {object} errors.ErrorResponse
+// @Router /api/plan/seat/{planId} [put]
 func (h *Handler) UpdateSeat(c *gin.Context) {
 	id, err := uuid.Parse(c.Param("seatId"))
 	var input dto.Seat
@@ -223,7 +321,7 @@ func (h *Handler) UpdateSeat(c *gin.Context) {
 		return
 	}
 
-	statusCode, err := h.planService.UpdateSeat(input, id)
+	statusCode, err := h.planService.UpdateSeat(c, &input, id)
 
 	if err != nil {
 		c.JSON(statusCode, errors.ErrorResponse{
@@ -241,6 +339,18 @@ func (h *Handler) UpdateSeat(c *gin.Context) {
 	})
 }
 
+// DeletePlan @Summary Delete plan
+// @Description Deletes coworking plan
+// @ID delete-plan
+// @Tags Plans
+// @Accept  json
+// @Produce  json
+// @Param planId path string true "Plan Id"
+// @Success 204 {object} responses.SuccessResponse
+// @Failure 400 {object} errors.ErrorResponse
+// @Failure 500 {object} errors.ErrorResponse
+// @Failure default {object} errors.ErrorResponse
+// @Router /api/plan/{planId} [delete]
 func (h *Handler) DeletePlan(c *gin.Context) {
 	id, err := uuid.Parse(c.Param("planId"))
 
@@ -253,7 +363,7 @@ func (h *Handler) DeletePlan(c *gin.Context) {
 		return
 	}
 
-	statusCode, err := h.planService.DeletePlan(id)
+	statusCode, err := h.planService.DeletePlan(c, id)
 
 	if err != nil {
 		c.JSON(statusCode, errors.ErrorResponse{
@@ -271,6 +381,18 @@ func (h *Handler) DeletePlan(c *gin.Context) {
 	})
 }
 
+// DeleteSeat @Summary Delete seat from coworking plan
+// @Description Deletes seat
+// @ID delete-seat
+// @Tags Seats
+// @Accept  json
+// @Produce  json
+// @Param seatId path string true "Seat Id"
+// @Success 204 {object} responses.SuccessResponse
+// @Failure 400 {object} errors.ErrorResponse
+// @Failure 500 {object} errors.ErrorResponse
+// @Failure default {object} errors.ErrorResponse
+// @Router /api/plan/seat/{seatId} [delete]
 func (h *Handler) DeleteSeat(c *gin.Context) {
 	id, err := uuid.Parse(c.Param("seatId"))
 
@@ -283,7 +405,7 @@ func (h *Handler) DeleteSeat(c *gin.Context) {
 		return
 	}
 
-	statusCode, err := h.planService.DeleteSeat(id)
+	statusCode, err := h.planService.DeleteSeat(c, id)
 
 	if err != nil {
 		c.JSON(statusCode, errors.ErrorResponse{

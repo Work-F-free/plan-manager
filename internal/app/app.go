@@ -27,9 +27,9 @@ func Run() error {
 	repo := repository.New(connection)
 
 	minioServ := minioService.NewMinioClient()
-	err = minioServ.InitMinio()
+	err = nil
 	if err != nil {
-		logrus.Fatalf("error occured while сonnecting DB: %s", err.Error())
+		logrus.Fatalf("error occured while сonnecting MinIO: %s", err.Error())
 		return err
 	}
 

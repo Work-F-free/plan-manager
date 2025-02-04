@@ -55,8 +55,8 @@ func (p *Plan) DeleteSeat(ctx context.Context, uuid uuid.UUID) (int, error) {
 	return http.StatusNoContent, nil
 }
 
-func (p *Plan) UpdateSeat(ctx context.Context, seat dto.Seat, uuid uuid.UUID) (int, error) {
-	err := p.seatRepo.Update(ctx, &seat, uuid)
+func (p *Plan) UpdateSeat(ctx context.Context, seat *dto.Seat, uuid uuid.UUID) (int, error) {
+	err := p.seatRepo.Update(ctx, seat, uuid)
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}
@@ -80,8 +80,8 @@ func (p *Plan) GetAllPlans(ctx context.Context) ([]dto.Plan, int, error) {
 	return plans, http.StatusOK, nil
 }
 
-func (p *Plan) CreatePlan(ctx context.Context, seat dto.Plan) (int, error) {
-	err := p.planRepo.Insert(ctx, &seat)
+func (p *Plan) CreatePlan(ctx context.Context, seat *dto.Plan) (int, error) {
+	err := p.planRepo.Insert(ctx, seat)
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}
@@ -96,8 +96,8 @@ func (p *Plan) DeletePlan(ctx context.Context, uuid uuid.UUID) (int, error) {
 	return http.StatusNoContent, nil
 }
 
-func (p *Plan) UpdatePlan(ctx context.Context, seat dto.Plan, uuid uuid.UUID) (int, error) {
-	err := p.planRepo.Update(ctx, &seat, uuid)
+func (p *Plan) UpdatePlan(ctx context.Context, seat *dto.Plan, uuid uuid.UUID) (int, error) {
+	err := p.planRepo.Update(ctx, seat, uuid)
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}

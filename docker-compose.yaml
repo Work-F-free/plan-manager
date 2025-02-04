@@ -27,8 +27,8 @@ services:
         limits:
           cpus: "0.5"
           memory: 1G
-#    networks:
-#      - backend
+    networks:
+      - backend
 
   mongo:
     image: mongo:6.0
@@ -54,8 +54,8 @@ services:
         limits:
           cpus: "1"
           memory: 2G
-#    networks:
-#      - backend
+    networks:
+      - backend
 
   planner:
     container_name: planner_service
@@ -87,8 +87,8 @@ services:
       options:
         max-size: "500k"
         max-file: "15"
-#    networks:
-#      - backend
+    networks:
+      - backend
 
 
 networks:

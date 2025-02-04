@@ -22,6 +22,18 @@ func NewMinioHandler(minioService minio.Client) *Handler {
 	}
 }
 
+// CreateOne @Summary Create one
+// @Description Create one file
+// @ID create-one
+// @Tags Files
+// @Accept json
+// @Produce  json
+// @Param file formData file true "Files"
+// @Success 200 {object} responses.SuccessResponse
+// @Failure 400 {object} errors.ErrorResponse
+// @Failure 500 {object} errors.ErrorResponse
+// @Failure default {object} errors.ErrorResponse
+// @Router /api/files/ [post]
 func (h *Handler) CreateOne(c *gin.Context) {
 	file, err := c.FormFile("file")
 	if err != nil {
@@ -76,6 +88,17 @@ func (h *Handler) CreateOne(c *gin.Context) {
 	})
 }
 
+// CreateMany @Summary Create many
+// @Description Create several files
+// @ID create-many
+// @Tags Files
+// @Accept multipart/form-data
+// @Produce json
+// @Success 200 {object} responses.SuccessResponse
+// @Failure 400 {object} errors.ErrorResponse
+// @Failure 500 {object} errors.ErrorResponse
+// @Failure default {object} errors.ErrorResponse
+// @Router /api/files/many [post]
 func (h *Handler) CreateMany(c *gin.Context) {
 	form, err := c.MultipartForm()
 	if err != nil {
@@ -145,6 +168,18 @@ func (h *Handler) CreateMany(c *gin.Context) {
 	})
 }
 
+// GetOne @Summary Get one
+// @Description Get one file
+// @ID get-one
+// @Tags Files
+// @Accept  json
+// @Produce  json
+// @Param objectID path string true "Object Id"
+// @Success 200 {object} responses.SuccessResponse
+// @Failure 400 {object} errors.ErrorResponse
+// @Failure 500 {object} errors.ErrorResponse
+// @Failure default {object} errors.ErrorResponse
+// @Router /api/files/ [get]
 func (h *Handler) GetOne(c *gin.Context) {
 	objectID := c.Param("objectID")
 
@@ -165,6 +200,18 @@ func (h *Handler) GetOne(c *gin.Context) {
 	})
 }
 
+// GetMany @Summary Get many
+// @Description Get several files
+// @ID get-many
+// @Tags Files
+// @Accept  json
+// @Produce  json
+// @Param objectIDs body dto.ObjectIdsDto true "Object Ids"
+// @Success 200 {object} responses.SuccessResponse
+// @Failure 400 {object} errors.ErrorResponse
+// @Failure 500 {object} errors.ErrorResponse
+// @Failure default {object} errors.ErrorResponse
+// @Router /api/files/many [get]
 func (h *Handler) GetMany(c *gin.Context) {
 	var objectIDs dto.ObjectIdsDto
 
@@ -187,13 +234,25 @@ func (h *Handler) GetMany(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"status":  http.StatusOK,
-		"message": "Files received successfully",
-		"data":    links,
+	c.JSON(http.StatusOK, responses.SuccessResponse{
+		Status:  http.StatusOK,
+		Message: "Files received successfully",
+		Data:    links,
 	})
 }
 
+// DeleteOne @Summary Delete one
+// @Description Deletes one file
+// @ID delete-one
+// @Tags Files
+// @Accept  json
+// @Produce  json
+// @Param objectID path string true "Object Id"
+// @Success 200 {object} responses.SuccessResponse
+// @Failure 400 {object} errors.ErrorResponse
+// @Failure 500 {object} errors.ErrorResponse
+// @Failure default {object} errors.ErrorResponse
+// @Router /api/files/ [delete]
 func (h *Handler) DeleteOne(c *gin.Context) {
 	objectID := c.Param("objectID")
 
@@ -212,6 +271,18 @@ func (h *Handler) DeleteOne(c *gin.Context) {
 	})
 }
 
+// DeleteMany @Summary Delete many
+// @Description Deletes several files
+// @ID delete-many
+// @Tags Files
+// @Accept  json
+// @Produce  json
+// @Param objectIDs body dto.ObjectIdsDto true "Object Ids"
+// @Success 200 {object} responses.SuccessResponse
+// @Failure 400 {object} errors.ErrorResponse
+// @Failure 500 {object} errors.ErrorResponse
+// @Failure default {object} errors.ErrorResponse
+// @Router /api/files/many [delete]
 func (h *Handler) DeleteMany(c *gin.Context) {
 	var objectIDs dto.ObjectIdsDto
 

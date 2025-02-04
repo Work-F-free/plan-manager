@@ -1,6 +1,9 @@
 package main
 
-import "seatPlanner/internal/app"
+import (
+	_ "seatPlanner/docs"
+	"seatPlanner/internal/app"
+)
 
 // @title           Coworking Plan Storage
 // @version         1.0

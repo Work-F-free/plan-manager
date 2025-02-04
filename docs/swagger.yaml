@@ -1,0 +1,591 @@
+basePath: /
+definitions:
+  dto.ObjectIdsDto:
+    properties:
+      objectIDs:
+        items:
+          type: string
+        type: array
+    type: object
+  dto.Plan:
+    properties:
+      background:
+        type: string
+      id:
+        type: string
+      seats:
+        items:
+          $ref: '#/definitions/dto.Seat'
+        type: array
+    type: object
+  dto.Seat:
+    properties:
+      color:
+        type: string
+      coord_x:
+        type: number
+      coord_y:
+        type: number
+      id:
+        type: string
+      type:
+        type: string
+    type: object
+  errors.ErrorResponse:
+    properties:
+      code:
+        type: integer
+      details: {}
+      error:
+        type: string
+    type: object
+  responses.SuccessResponse:
+    properties:
+      data: {}
+      message:
+        type: string
+      status:
+        type: integer
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: danielkoreshkov@gmail.com
+    name: Koreshkov Daniil
+  description: Service for storing Coworking Plan Data
+  title: Coworking Plan Storage
+  version: "1.0"
+paths:
+  /api/files/:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes one file
+      operationId: delete-one
+      parameters:
+      - description: Object Id
+        in: path
+        name: objectID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+      tags:
+      - Files
+    get:
+      consumes:
+      - application/json
+      description: Get one file
+      operationId: get-one
+      parameters:
+      - description: Object Id
+        in: path
+        name: objectID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+      tags:
+      - Files
+    post:
+      consumes:
+      - application/json
+      description: Create one file
+      operationId: create-one
+      parameters:
+      - description: Files
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+      tags:
+      - Files
+  /api/files/many:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes several files
+      operationId: delete-many
+      parameters:
+      - description: Object Ids
+        in: body
+        name: objectIDs
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ObjectIdsDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+      tags:
+      - Files
+    get:
+      consumes:
+      - application/json
+      description: Get several files
+      operationId: get-many
+      parameters:
+      - description: Object Ids
+        in: body
+        name: objectIDs
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ObjectIdsDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+      tags:
+      - Files
+    post:
+      consumes:
+      - multipart/form-data
+      description: Create several files
+      operationId: create-one
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+      tags:
+      - Files
+  /api/plan:
+    get:
+      consumes:
+      - application/json
+      description: Get data about all coworkings plans in applicationi
+      operationId: get-plans
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.Plan'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+      tags:
+      - Plans
+  /api/plan/:
+    post:
+      consumes:
+      - application/json
+      description: Creates plan
+      operationId: create-plan
+      parameters:
+      - description: Coworking plan
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/dto.Plan'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/responses.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+      tags:
+      - Plans
+  /api/plan/{planId}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes coworking plan
+      operationId: delete-plan
+      parameters:
+      - description: Plan Id
+        in: path
+        name: planId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/responses.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+      tags:
+      - Plans
+    get:
+      consumes:
+      - application/json
+      description: Get data about one coworking
+      operationId: get-plan
+      parameters:
+      - description: Plan Id
+        in: path
+        name: planId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Plan'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+      tags:
+      - Plans
+    put:
+      consumes:
+      - application/json
+      description: Update plan from coworking plans
+      operationId: update-plan
+      parameters:
+      - description: Plan Id
+        in: path
+        name: planId
+        required: true
+        type: string
+      - description: Coworking plan
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/dto.Plan'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/responses.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+      tags:
+      - Plans
+  /api/plan/seat/{planId}:
+    get:
+      consumes:
+      - application/json
+      description: Get all seats from coworking
+      operationId: get-seats
+      parameters:
+      - description: Plan Id
+        in: path
+        name: planId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.Seat'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+      tags:
+      - Seats
+    post:
+      consumes:
+      - application/json
+      description: Creates seat
+      operationId: create-seat
+      parameters:
+      - description: Plan Id
+        in: path
+        name: planId
+        required: true
+        type: string
+      - description: Seat in coworking plan
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/dto.Seat'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/responses.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+      tags:
+      - Seats
+    put:
+      consumes:
+      - application/json
+      description: Updates seat
+      operationId: update-seat
+      parameters:
+      - description: Plan Id
+        in: path
+        name: planId
+        required: true
+        type: string
+      - description: Seat in coworking plan
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/dto.Seat'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/responses.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+      tags:
+      - Seats
+  /api/plan/seat/{seatId}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes seat
+      operationId: delete-seat
+      parameters:
+      - description: Seat Id
+        in: path
+        name: seatId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/responses.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+      tags:
+      - Seats
+    get:
+      consumes:
+      - application/json
+      description: Get data about one coworking
+      operationId: get-seat
+      parameters:
+      - description: Seat Id
+        in: path
+        name: seatId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Seat'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/errors.ErrorResponse'
+      tags:
+      - Seats
+swagger: "2.0"
