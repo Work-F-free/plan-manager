@@ -36,17 +36,8 @@ func LoadConfig() {
 		DBUsername: os.Getenv("DB_USERNAME"),
 	}
 
-	minCfg := MinIOConfig{
-		MinIOUsername:   os.Getenv("MINIO_USERNAME"),
-		MinIOPassword:   os.Getenv("MINIO_PASSWORD"),
-		MinIOBucketName: os.Getenv("MINIO_BUCKET_NAME"),
-		MinioEndpoint:   os.Getenv("MINIO_ENDPOINT"),
-		MinIOUseSSL:     os.Getenv("MINIO_USE_SSL") == "true",
-	}
-
 	AppConfig = &Config{
-		Port:        os.Getenv("PORT"),
-		DBConfig:    dbCfg,
-		MinIOConfig: minCfg,
+		Port:     os.Getenv("PORT"),
+		DBConfig: dbCfg,
 	}
 }

@@ -6,22 +6,18 @@ import (
 	"github.com/gin-gonic/gin"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
-	"seatPlanner/internal/handler/minio"
 	"seatPlanner/internal/handler/plan"
 	"seatPlanner/internal/service"
-	minioService "seatPlanner/pkg/minio"
 	"time"
 )
 
 type Handler struct {
-	minioHandler *minio.Handler
-	planHandler  *plan.Handler
+	planHandler *plan.Handler
 }
 
-func New(minioServ minioService.Client, planServ service.PlannerService) *Handler {
+func New(planServ service.PlannerService) *Handler {
 	return &Handler{
-		minioHandler: minio.NewMinioHandler(minioServ),
-		planHandler:  plan.NewPlanHandler(planServ),
+		planHandler: plan.NewPlanHandler(planServ),
 	}
 }
 
@@ -45,18 +41,6 @@ func (h *Handler) InitRoutes() *gin.Engine {
 
 	api := router.Group("/api")
 	{
-		minio := api.Group("/files")
-		{
-			minio.POST("/", h.minioHandler.CreateOne)
-			minio.POST("/many", h.minioHandler.CreateMany)
-
-			minio.GET("/:objectID", h.minioHandler.GetOne)
-			minio.GET("/many", h.minioHandler.GetMany)
-
-			minio.DELETE("/:objectID", h.minioHandler.DeleteOne)
-			minio.DELETE("/many", h.minioHandler.DeleteMany)
-		}
-
 		mongo := api.Group("/plan")
 		{
 			mongo.GET("/", h.planHandler.GetAllPlans)

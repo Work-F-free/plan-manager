@@ -1,12 +1,5 @@
 basePath: /
 definitions:
-  dto.ObjectIdsDto:
-    properties:
-      objectIDs:
-        items:
-          type: string
-        type: array
-    type: object
   dto.Plan:
     properties:
       background:
@@ -27,6 +20,8 @@ definitions:
       coord_y:
         type: number
       id:
+        type: string
+      number_seat:
         type: string
       type:
         type: string
@@ -56,196 +51,6 @@ info:
   title: Coworking Plan Storage
   version: "1.0"
 paths:
-  /api/files/:
-    delete:
-      consumes:
-      - application/json
-      description: Deletes one file
-      operationId: delete-one
-      parameters:
-      - description: Object Id
-        in: path
-        name: objectID
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/responses.SuccessResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/errors.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/errors.ErrorResponse'
-        default:
-          description: ""
-          schema:
-            $ref: '#/definitions/errors.ErrorResponse'
-      tags:
-      - Files
-    get:
-      consumes:
-      - application/json
-      description: Get one file
-      operationId: get-one
-      parameters:
-      - description: Object Id
-        in: path
-        name: objectID
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/responses.SuccessResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/errors.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/errors.ErrorResponse'
-        default:
-          description: ""
-          schema:
-            $ref: '#/definitions/errors.ErrorResponse'
-      tags:
-      - Files
-    post:
-      consumes:
-      - application/json
-      description: Create one file
-      operationId: create-one
-      parameters:
-      - description: Files
-        in: formData
-        name: file
-        required: true
-        type: file
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/responses.SuccessResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/errors.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/errors.ErrorResponse'
-        default:
-          description: ""
-          schema:
-            $ref: '#/definitions/errors.ErrorResponse'
-      tags:
-      - Files
-  /api/files/many:
-    delete:
-      consumes:
-      - application/json
-      description: Deletes several files
-      operationId: delete-many
-      parameters:
-      - description: Object Ids
-        in: body
-        name: objectIDs
-        required: true
-        schema:
-          $ref: '#/definitions/dto.ObjectIdsDto'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/responses.SuccessResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/errors.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/errors.ErrorResponse'
-        default:
-          description: ""
-          schema:
-            $ref: '#/definitions/errors.ErrorResponse'
-      tags:
-      - Files
-    get:
-      consumes:
-      - application/json
-      description: Get several files
-      operationId: get-many
-      parameters:
-      - description: Object Ids
-        in: body
-        name: objectIDs
-        required: true
-        schema:
-          $ref: '#/definitions/dto.ObjectIdsDto'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/responses.SuccessResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/errors.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/errors.ErrorResponse'
-        default:
-          description: ""
-          schema:
-            $ref: '#/definitions/errors.ErrorResponse'
-      tags:
-      - Files
-    post:
-      consumes:
-      - multipart/form-data
-      description: Create several files
-      operationId: create-one
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/responses.SuccessResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/errors.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/errors.ErrorResponse'
-        default:
-          description: ""
-          schema:
-            $ref: '#/definitions/errors.ErrorResponse'
-      tags:
-      - Files
   /api/plan:
     get:
       consumes:
