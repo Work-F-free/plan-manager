@@ -26,7 +26,7 @@ services:
       resources:
         limits:
           cpus: "0.5"
-          memory: 1G
+          memory: 2G
 
   mongo:
     image: mongo:6.0
@@ -34,6 +34,8 @@ services:
       DB_USERNAME: "${DB_USERNAME:?error}"
       DB_PASSWORD: "${DB_PASSWORD:?error}"
       DB_NAME: "${DB_NAME:?error}"
+    ports:
+      - "27017:27017"
     healthcheck:
       test: mongo --username ${DB_USERNAME} --password ${DB_PASSWORD} --eval "db.adminCommand('ping')"
       interval: 10s

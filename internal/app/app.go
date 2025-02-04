@@ -10,7 +10,6 @@ import (
 	"seatPlanner/internal/repository/mongo"
 	"seatPlanner/internal/server"
 	"seatPlanner/internal/service"
-	minioService "seatPlanner/pkg/minio"
 )
 
 func Run() error {
@@ -26,16 +25,9 @@ func Run() error {
 
 	repo := repository.New(connection)
 
-	minioServ := minioService.NewMinioClient()
-	err = nil
-	if err != nil {
-		logrus.Fatalf("error occured while сonnecting MinIO: %s", err.Error())
-		return err
-	}
-
 	planService := service.NewService(repo)
 
-	handlers := handler.New(minioServ, planService)
+	handlers := handler.New(planService)
 	if err = serv.Run(os.Getenv("API_PORT"), handlers.InitRoutes()); err != nil {
 		logrus.Fatalf("error occured while running Http-Server: %s", err.Error())
 		return err
